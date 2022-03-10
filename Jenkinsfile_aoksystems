@@ -1,0 +1,4 @@
+#!groovy
+
+@Library('cilibs@master') _
+idm("configuration","depl-idm-ms-configuration.yml")

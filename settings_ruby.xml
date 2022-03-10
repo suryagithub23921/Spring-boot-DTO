@@ -1,0 +1,43 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	  <offline>false</offline>
+
+      <servers>
+	     <server>
+		   <id>rubynexus</id>
+		   <username>idm-tech</username>
+		   <password>blYks1VSegGHi=CdMG3</password>
+	     </server>
+      </servers> 
+	  
+	  <mirrors>
+			  <mirror>
+					  <id>nexus-mirror</id>
+					  <mirrorOf>*</mirrorOf>
+					  <url>https://nexus.rubyhealth.b51.msgruby.cloud/repository/maven-public/</url>
+			  </mirror>
+	  </mirrors>
+	  
+	  <profiles>
+        <profile>
+            <id>myprofile</id>
+            <repositories>
+                <repository>
+                    <id>nexus</id>
+                    <url>https://nexus.rubyhealth.b51.msgruby.cloud/repository/maven-public/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>myprofile</activeProfile>
+    </activeProfiles>
+</settings>

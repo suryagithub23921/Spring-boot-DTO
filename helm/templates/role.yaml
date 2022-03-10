@@ -1,0 +1,14 @@
+{{ if .Values.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "configuration.fullname" . }}
+  labels:
+    {{- include "configuration.labels" . | nindent 4 }}
+  {{- include "aok.annotations" .Values.aokMetadata | nindent 2 }}    
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "pods"]
+  # resourceNames: ["oscare-idm-configuration"]
+  verbs: ["get", "watch", "list"]
+{{ end }}

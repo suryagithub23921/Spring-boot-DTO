@@ -1,0 +1,35 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	  <offline>false</offline>
+
+	  <mirrors>
+			  <mirror>
+					  <id>nexus-mirror</id>
+					  <mirrorOf>*</mirrorOf>
+					  <url>https://nexus.central.aws.aok-systems.de/repository/maven-public/</url>
+			  </mirror>
+	  </mirrors>
+	  
+	  <profiles>
+        <profile>
+            <id>myprofile</id>
+            <repositories>
+                <repository>
+                    <id>Artifactory</id>
+                    <url>https://nexus.central.aws.aok-systems.de/repository/maven-public/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>myprofile</activeProfile>
+    </activeProfiles>
+</settings>

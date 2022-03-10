@@ -1,0 +1,24 @@
+image:
+  repository: "docker.rubyhealth.b51.msgruby.cloud/idm/oscare-idm-configuration"
+  tag: 12
+
+caCerts:
+  secretName: idm-cacerts
+
+applicationConfig:
+  spring:
+      datasource:
+          password: postgres
+          url: jdbc:postgresql://postgresql:5432/config
+          username: postgres
+          driver-class-name: org.postgresql.Driver
+          hikari:
+            maximumPoolSize: 15
+
+resources:
+  requests:
+    cpu: 150m
+    memory: "350Mi"
+  limits:
+    cpu: 350m
+    memory: "500Mi"

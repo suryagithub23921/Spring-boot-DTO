@@ -1,0 +1,26 @@
+image:
+  repository: "636349882985.dkr.ecr.eu-central-1.amazonaws.com/cx-idp/configuration"
+  tag: 1
+
+imagePullSecrets:
+  - name: ecr-credentials
+
+caCerts:
+  secretName: cx-idp-cacerts
+
+applicationConfig:
+  spring:
+    datasource:
+      password: postgresAdmin123!
+      url: jdbc:postgresql://postgresql:5432/config
+      username: postgres
+      hikari:
+        maximumPoolSize: 25
+
+resources:
+  requests:
+    cpu: 150m
+    memory: "350Mi"
+  limits:
+    cpu: 500m
+    memory: "500Mi"

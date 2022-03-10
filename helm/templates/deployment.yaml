@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "configuration.fullname" . }}
+  labels:
+    {{- include "configuration.labels" . | nindent 4 }}
+  {{- include "aok.annotations" .Values.aokMetadata | nindent 2 }}    
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "configuration.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "configuration.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "configuration.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 9292
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            failureThreshold: 8
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: cfg-app
+              mountPath: /app/etc
+              readOnly: true  
+          {{- if .Values.caCerts.secretName }}
+            - name: ca-certs
+              mountPath: /app/cacerts
+              subPath: cacerts
+              readOnly: true
+          {{- end }}
+          env:
+            - name: SPRING_CONFIG_LOCATION
+              value: /app/etc/application.yml
+          {{- if .Values.caCerts.secretName }}
+            - name: JAVA_TOOL_OPTIONS
+              value: >
+                -Djavax.net.ssl.trustStore=/app/cacerts
+                -Djavax.net.ssl.trustStorePassword={{ .Values.caCerts.password | default "changeit" }}
+          {{- end }}
+      enableServiceLinks: false
+      volumes:
+        - name: cfg-app
+          configMap:
+            name: oscare-idm-configuration
+            items:
+              - key: configuration_application.yml
+                path: application.yml
+          {{- if .Values.caCerts.secretName }}
+        - name: ca-certs
+          secret:
+            secretName: {{ .Values.caCerts.secretName }}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

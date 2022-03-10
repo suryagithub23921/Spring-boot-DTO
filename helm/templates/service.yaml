@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "configuration.fullname" . }}
+  labels:
+    {{- include "configuration.labels" . | nindent 4 }}
+  {{- include "aok.annotations" .Values.aokMetadata | nindent 2 }}    
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "configuration.selectorLabels" . | nindent 4 }}

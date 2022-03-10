@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      autoCommit: false
+      maximumPoolSize: 20
+      minimumIdle: 5
+      idleTimeout: 35000
+      maxLifetime: 1800000
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        connection:
+          autocommit: false
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+server:
+    port: 9292
+    use-forward-headers: true

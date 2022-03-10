@@ -1,0 +1,24 @@
+image:
+  repository: "636349882985.dkr.ecr.eu-central-1.amazonaws.com/cx-idp/configuration"
+  tag: 3
+
+imagePullSecrets:
+  - name: ecr-credentials
+
+caCerts:
+  secretName: cx-idp-cacerts
+
+resources:
+  requests:
+    cpu: 150m
+    memory: "350Mi"
+  limits:
+    cpu: 500m
+    memory: "500Mi"
+
+aokMetadata:
+  partOf: "cx-idp" #Projekt zu dem die Komponente gehört
+  component: "cx-idp" #Name der Komponente im Projekt
+  contact: "mailto:team-admin@sys.aok.de" #Emailadresse einer für das Deployment verantwortlichen Instanz
+  origin: "UNDEFINED" # ArgoCD-Applikation/Pipeline, die das Deployment erzeugt hat, wird von       
+  costcenter: "UNDEFINED" # (Noch nicht genutzt) Kostenstelle im ERP-System

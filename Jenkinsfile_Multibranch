@@ -1,0 +1,55 @@
+#!groovy
+
+pipeline {
+    agent { node { label 'os-slave' } }
+    options {
+        timeout(time: 24, unit: 'HOURS')
+         }
+    stages {
+		stage('clean') {
+		   steps{
+			script{
+			       sh 'mvn -X -s settings_ruby.xml clean'
+      			}
+			}
+		}
+        stage('test') {
+		   steps{
+			script{
+			       sh 'mvn -X -s settings_ruby.xml test'
+      			}
+			}
+		}
+		stage('Install') {
+		   steps{
+			script{
+			        sh 'mvn -X -s settings_ruby.xml install -Dmaven.test.skip=true'
+                }
+			}
+		}
+		stage('SonarQube analysis') {
+            steps {
+			  print "SonarQube analysis"
+              withSonarQubeEnv('Ruby SonarQube') {
+					sh 'mvn -X -s settings_ruby.xml sonar:sonar'
+					}
+					timeout(time: 1, unit: 'MINUTES') {
+					script {
+						def qg = waitForQualityGate()
+						if (qg.status != 'OK') {
+							error "Pipeline aborted due to a quality gate failure: ${qg.status}"
+						}
+					}
+				}
+			}
+        }
+    }
+	post {
+	    always {
+				sh 'echo bundling Jacoco test report and junit'
+				junit 'target/surefire-reports/*.xml'					
+				jacoco execPattern: '**/target/**.exec'
+				}     
+          }
+}
+

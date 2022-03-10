@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oscare-idm-configuration
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+data:
+  configuration_application.yml: |-
+{{ toYaml .Values.applicationConfig | indent 3   }}

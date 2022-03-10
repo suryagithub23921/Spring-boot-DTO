@@ -1,0 +1,14 @@
+#image:
+#  repository: "636349882985.dkr.ecr.eu-central-1.amazonaws.com/cx-idp/configuration"
+#  tag: 1
+
+
+applicationConfig:
+  spring:
+    datasource:
+      password: Gabel!22
+      url: jdbc:postgresql://native-postgres-instance1.cl.aws.aok-systems.de:5433/cx_idp_postgresql_orange?currentSchema=config
+      username: cx_idp
+      hikari:
+        maximumPoolSize: 25
+
